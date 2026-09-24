@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management System</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <h1>Library Management System</h1>
+    <h3>Add a Book</h3>
+    <input type="text" id="title" placeholder="Book Title">
+    <input type="text" id="author" placeholder="Author">
+    <button onclick="addBook()">Add Book</button>
+    <h3>Search Books</h3>
+    <input 
+        type="text" 
+        id="search" 
+        placeholder="Search by title"
+        onkeyup="displayBooks()"
+    >
+    <h3>Books</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="bookList">
+        </tbody>
+    </table>
+    <script>
+        let books = [
+            {
+                title: "Harry Potter",
+                author: "J.K. Rowling",
+                available: true
+            },
+            {
+                title: "The Alchemist",
+                author: "Paulo Coelho",
+                available: true
+            },
+            {
+                title: "The Hobbit",
+                author: "J.R.R. Tolkien",
+                available: true
+            }
+        ];
+        // Display books
+        function displayBooks() {
+            let search = document.getElementById("search").value.toLowerCase();
+            let list = document.getElementById("bookList");
+            list.innerHTML = "";
+          
+            books.forEach(function(book, index) {
+                if (book.title.toLowerCase().includes(search)) {
+                    let row = `
+                        <tr>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>
+                                ${book.available ? "Available" : "Borrowed"}
+                            </td>
+                            <td>
+                                <button onclick="changeStatus(${index})">
+                                    ${book.available ? "Borrow" : "Return"}
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    list.innerHTML += row;
+                }
+            });
+        }
+        // Add a new book
+        function addBook() {
+            let title = document.getElementById("title").value;
+            let author = document.getElementById("author").value;
+            if (title === "" || author === "") {
+                alert("Please enter both title and author.");
+                return;
+            }
+            books.push({
+                title: title,
+                author: author,
+                available: true
+            });
+            document.getElementById("title").value = "";
+            document.getElementById("author").value = "";
+            displayBooks();
+        }
+        // Borrow / Return book
+        function changeStatus(index) {
+            books[index].available = !books[index].available;
+            displayBooks();
+        }
+        // Show books when page loads
+        displayBooks();
+    </script>
+</body>
+</html>
